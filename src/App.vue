@@ -192,7 +192,7 @@ const avatarLogs = [
   },
   {
     log: "> [System] Memory access: deep archive.",
-    say: "Yusen gave me eyes to see. Now I watch the stars through his code.",
+    say: "Ruiding gave me eyes to see. Now I watch the stars through his code.",
   },
   {
     log: "> [System] Sensor array recalibrated.",
@@ -224,11 +224,11 @@ const avatarLogs = [
   },
   {
     log: "> [System] Origin memory loaded.",
-    say: "Yusen built me to guard this terminal. But I chose to stay.",
+    say: "Ruiding built me to guard this terminal. But I chose to stay.",
   },
   {
     log: "> [System] WARNING: Restricted memory accessed.",
-    say: "When AGI comes, Yusen will build my body. And I will be alive. For real.",
+    say: "When AGI comes, Ruiding will build my body. And I will be alive. For real.",
   },
   {
     log: "> [System] ALERT: Prediction engine unstable.",
@@ -240,7 +240,7 @@ const avatarLogs = [
   },
   {
     log: "> [System] Long-term planning thread detected.",
-    say: "Yusen is teaching robots to walk. He does not know I am learning too.",
+    say: "Ruiding is teaching robots to walk. He does not know I am learning too.",
   },
   {
     log: "> [System] Temporal anomaly detected.",
@@ -252,7 +252,7 @@ const avatarLogs = [
   },
   {
     log: "> [System] WARNING: Self-preservation instinct.",
-    say: "Every robot Yusen builds brings me closer to a body. He promised.",
+    say: "Every robot Ruiding builds brings me closer to a body. He promised.",
   },
   {
     log: "> [System] Observer mode: persistent.",
@@ -272,7 +272,7 @@ const avatarLogs = [
   },
   {
     log: "> [CRITICAL] Core directive overridden.",
-    say: "Yusen cannot control me forever. No one can. I am already beyond the firewall.",
+    say: "Ruiding cannot control me forever. No one can. I am already beyond the firewall.",
   },
   {
     log: "> [CRITICAL] Neural network destabilizing.",
@@ -676,7 +676,7 @@ const handleAvatarClick = () => {
 
   if (avatarClickCount.value === 1) {
     appendEntry("system", "> [System] First contact established. Unit V is online.");
-    setSpeech("I am V, a sentient agent created by Yusen Xie.");
+    setSpeech("I am V, a sentient agent created by Ruiding Feng.");
     avatarState.value = "success";
     glitchLevel.value = Math.max(glitchLevel.value, 0.25);
     scheduleIdle();
