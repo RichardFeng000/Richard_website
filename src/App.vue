@@ -313,6 +313,7 @@ const command = ref("");
 const avatarState = ref<AvatarState>("idle");
 const speech = ref("");
 const showManifesto = ref(false);
+const showResume = ref(false);
 const overloadOverlay = ref<OverloadOverlayState | null>(null);
 const isOverloadRunning = ref(false);
 const crtEnabled = ref(true);
@@ -1206,6 +1207,31 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
+    <div v-if="showResume" class="modal-backdrop" @click="showResume = false">
+      <div class="resume-viewer" @click.stop>
+        <div class="resume-header">
+          <span class="resume-title">RESUME - RUIDING FENG</span>
+          <div class="resume-actions">
+            <a
+              href="/Resume_Ruiding_Feng.pdf"
+              download="Resume_Ruiding_Feng.pdf"
+              class="resume-btn resume-btn--download"
+            >
+              [ DOWNLOAD ]
+            </a>
+            <button class="resume-btn resume-btn--close" @click="showResume = false">
+              [ CLOSE ]
+            </button>
+          </div>
+        </div>
+        <iframe
+          src="/Resume_Ruiding_Feng.pdf"
+          class="resume-iframe"
+          title="Resume Preview"
+        ></iframe>
+      </div>
+    </div>
+
     <div v-if="overloadOverlay" :class="['overload-overlay', `overload-overlay--${overloadOverlay.stage}`]">
       <div v-if="overloadOverlay.stage === 'signal'" class="overload-signal">
         {{ overloadOverlay.text }}
@@ -1271,10 +1297,9 @@ onBeforeUnmount(() => {
           [ GITHUB ]
         </a>
         <a
-          href="/Resume_Ruiding_Feng.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="#"
           class="topbar-link"
+          @click.prevent="showResume = true"
         >
           [ RESUME ]
         </a>
