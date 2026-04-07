@@ -153,17 +153,17 @@ Cross-embodiment robot operating system.
   resume: `RESUME:
   Status: Available upon request.
   Contact: ruiding.feng@example.com
-  LinkedIn: linkedin.com/in/ruiding-feng`,
+  LinkedIn: linkedin.com/in/ruiding-feng-552640268`,
   contact: `CONTACT INFORMATION:
   Email:    ruiding.feng@example.com
   GitHub:   github.com/fengruiding
-  LinkedIn: linkedin.com/in/ruiding-feng
+  LinkedIn: linkedin.com/in/ruiding-feng-552640268
   Org:      github.com/VectorRobotics`,
   links: `EXTERNAL LINKS:
   [GitHub]     github.com/fengruiding
   [Vector OS]  github.com/VectorRobotics/vector-os-nano
   [VectorOrg]  github.com/VectorRobotics
-  [LinkedIn]   linkedin.com/in/ruiding-feng
+  [LinkedIn]   linkedin.com/in/ruiding-feng-552640268
   [Email]      ruiding.feng@example.com`,
   scan: `INITIATING FULL SPECTRUM SCAN...
 > Scanning visitor biometrics.......... DONE
@@ -1279,7 +1279,7 @@ onBeforeUnmount(() => {
           [ VECTOR OS ]
         </a>
         <a
-          href="https://linkedin.com/in/ruiding-feng"
+          href="https://www.linkedin.com/in/ruiding-feng-552640268/"
           target="_blank"
           rel="noopener noreferrer"
           class="topbar-link"
