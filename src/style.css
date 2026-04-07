@@ -4,8 +4,9 @@
   color-scheme: dark;
   --bg: #050505;
   --panel: #000000;
-  --line: #252525;
-  --line-soft: #171717;
+  --line: #4a4a4a;
+  --line-soft: #2d2d2d;
+  --claude-orange: #d97a57;
   --text: #ffffff;
   --text-soft: #bdbdbd;
   --text-dim: #6f6f6f;
@@ -70,6 +71,7 @@ input {
 
 .topbar-link {
   padding: 0.55rem 1rem;
+  border: 1px solid var(--line-soft);
   border-radius: 0.3rem;
   color: #a3a3a3;
   transition:
@@ -81,6 +83,7 @@ input {
 .topbar-link:hover {
   color: var(--text);
   background: #171717;
+  border-color: var(--line);
 }
 
 .panels {
@@ -99,6 +102,8 @@ input {
   border-radius: 0.45rem;
   background: var(--panel);
   box-shadow: var(--shadow);
+  outline: 1px solid rgba(255, 255, 255, 0.04);
+  outline-offset: -1px;
   overflow: hidden;
 }
 
@@ -122,7 +127,7 @@ input {
 .panel-title {
   font-family: "VT323", monospace;
   font-size: 1.8rem;
-  color: #9b9b9b;
+  color: var(--claude-orange);
   letter-spacing: 0.03em;
 }
 
@@ -132,13 +137,19 @@ input {
 }
 
 .terminal-history {
-  display: flex;
   flex: 1;
-  flex-direction: column;
-  gap: 0.55rem;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.terminal-history-scroll {
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  min-height: 0;
+}
+
+.history-ascii {
+  margin-bottom: 0.55rem;
 }
 
 .ascii-wrap {
@@ -150,7 +161,7 @@ input {
 .ascii-art {
   display: inline-block;
   margin: 0;
-  color: #cfcfcf;
+  color: var(--claude-orange);
   font-family: Consolas, Monaco, "Lucida Console", monospace;
   font-size: clamp(0.36rem, 0.38rem + 0.55vw, 0.9rem);
   line-height: 1;
@@ -162,6 +173,7 @@ input {
   word-break: break-word;
   font-size: 0.9rem;
   line-height: 1.6;
+  margin-bottom: 0.55rem;
 }
 
 .entry-system {
@@ -190,6 +202,8 @@ input {
   align-items: center;
   gap: 0.65rem;
   margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line-soft);
   flex-shrink: 0;
 }
 
@@ -227,7 +241,6 @@ input {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  image-rendering: pixelated;
 }
 
 .status-chip {
@@ -235,7 +248,7 @@ input {
   top: 1rem;
   right: 1rem;
   padding: 0.3rem 0.6rem;
-  border: 1px solid #383838;
+  border: 1px solid #5a5a5a;
   border-radius: 0.3rem;
   background: rgba(0, 0, 0, 0.86);
   color: #a5a5a5;
@@ -249,7 +262,7 @@ input {
   bottom: 1.5rem;
   max-width: min(85%, 32rem);
   padding: 0.85rem 1rem;
-  border: 1px solid #2f2f2f;
+  border: 1px solid #505050;
   background: rgba(0, 0, 0, 0.94);
   color: #ececec;
   font-size: 0.92rem;
@@ -267,7 +280,7 @@ input {
   height: 0;
   border-right: 0.45rem solid transparent;
   border-left: 0.45rem solid transparent;
-  border-top: 0.65rem solid #2f2f2f;
+  border-top: 0.65rem solid #505050;
   transform: translateX(-50%);
 }
 
@@ -285,7 +298,7 @@ input {
 .manifesto-card {
   max-width: 38rem;
   padding: 3rem 2.5rem;
-  border: 1px solid #333;
+  border: 1px solid #4d4d4d;
   background: #000;
   color: #fff;
   text-align: center;
@@ -345,7 +358,7 @@ input {
   max-height: 80vh;
   overflow-y: auto;
   padding: 1.5rem;
-  border: 1px solid #333;
+  border: 1px solid #4d4d4d;
   background: #000;
   line-height: 1.9;
   font-size: 0.95rem;
@@ -567,7 +580,7 @@ input {
   height: min(95vh, 60rem);
   display: flex;
   flex-direction: column;
-  border: 1px solid #333;
+  border: 1px solid #4d4d4d;
   background: #000;
   box-shadow: var(--shadow);
 }
@@ -578,7 +591,7 @@ input {
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #4d4d4d;
   background: #0a0a0a;
   flex-shrink: 0;
 }
@@ -597,7 +610,7 @@ input {
 
 .resume-btn {
   padding: 0.5rem 1rem;
-  border: 1px solid #444;
+  border: 1px solid #5b5b5b;
   border-radius: 0.3rem;
   background: #111;
   color: #a3a3a3;
@@ -613,7 +626,7 @@ input {
 .resume-btn:hover {
   color: #fff;
   background: #1f1f1f;
-  border-color: #666;
+  border-color: #8a8a8a;
 }
 
 .resume-btn--download {

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import resumeFileUrl from "../materials/Resume_Ruiding_Feng.pdf?url";
 
 type EntryType = "ascii" | "system" | "intro" | "user" | "output" | "error";
-type AvatarState = "idle" | "typing" | "success" | "error" | "scan";
+type AvatarState = "watching" | "typing" | "success" | "error" | "scan";
 
 interface HistoryEntry {
   type: EntryType;
@@ -25,6 +26,9 @@ interface OverloadOverlayState {
   subtext?: string;
   lines?: string[];
 }
+
+const resumeFileName = "Resume_Ruiding_Feng.pdf";
+const resumeFilePath = resumeFileUrl;
 
 const asciiArt = `
 ██████╗ ██╗   ██╗██╗██████╗ ██╗███╗   ██╗ ██████╗
@@ -185,6 +189,14 @@ const initialHistory = (): HistoryEntry[] => [
   { type: "system", text: 'Type "help" to see available commands.' },
 ];
 
+const ensureAsciiHistoryEntry = (entries: HistoryEntry[]) => {
+  if (entries.some((entry) => entry.type === "ascii")) {
+    return entries;
+  }
+
+  return [{ type: "ascii", text: asciiArt }, ...entries];
+};
+
 const avatarLogs = [
   {
     log: "> [System] Neural link acknowledged.",
@@ -310,7 +322,10 @@ const avatarLogs = [
 
 const history = ref<HistoryEntry[]>(initialHistory());
 const command = ref("");
-const avatarState = ref<AvatarState>("idle");
+const commandHistory = ref<string[]>([]);
+const commandHistoryIndex = ref(-1);
+const commandDraft = ref("");
+const avatarState = ref<AvatarState>("watching");
 const speech = ref("");
 const showManifesto = ref(false);
 const showResume = ref(false);
@@ -328,9 +343,11 @@ const avatarPanelRef = ref<HTMLElement | null>(null);
 
 const mouseX = ref(0);
 const mouseY = ref(0);
+const isAvatarHovered = ref(false);
 
 let speechTimeout = 0;
-let idleTimeout = 0;
+let watchingTimeout = 0;
+let typingTimeout = 0;
 let teaseTimeout = 0;
 let animationFrame = 0;
 let handleMouseMove: ((event: MouseEvent) => void) | null = null;
@@ -347,6 +364,8 @@ const statusBadgeText = computed(() => {
 
   return `[ UNIT_STATUS: ${avatarState.value.toUpperCase()} ]`;
 });
+
+const visibleHistory = computed(() => ensureAsciiHistoryEntry(history.value));
 
 const outputClass = (type: EntryType) => ({
   "entry-system": type === "system",
@@ -400,11 +419,96 @@ const setSpeech = (text: string, duration?: number) => {
   }, duration ?? text.length * 50 + 2000);
 };
 
-const scheduleIdle = (delay = 2500) => {
-  window.clearTimeout(idleTimeout);
-  idleTimeout = window.setTimeout(() => {
-    avatarState.value = "idle";
+const scheduleWatching = (delay = 2500) => {
+  window.clearTimeout(watchingTimeout);
+  watchingTimeout = window.setTimeout(() => {
+    avatarState.value = "watching";
   }, delay);
+};
+
+const setTypingState = () => {
+  window.clearTimeout(typingTimeout);
+  avatarState.value = "typing";
+  typingTimeout = window.setTimeout(() => {
+    if (avatarState.value === "typing") {
+      avatarState.value = "watching";
+    }
+  }, 220);
+};
+
+const handleCommandInput = () => {
+  if (isOverloadRunning.value) {
+    return;
+  }
+
+  if (commandHistoryIndex.value !== -1) {
+    commandHistoryIndex.value = -1;
+  }
+
+  commandDraft.value = command.value;
+  setTypingState();
+};
+
+const moveCaretToCommandEnd = async () => {
+  await nextTick();
+  const input = inputRef.value;
+  if (!input) {
+    return;
+  }
+
+  const position = input.value.length;
+  input.setSelectionRange(position, position);
+};
+
+const handleCommandNavigation = async (event: KeyboardEvent) => {
+  if (event.key !== "ArrowUp" && event.key !== "ArrowDown") {
+    return;
+  }
+
+  if (commandHistory.value.length === 0) {
+    return;
+  }
+
+  event.preventDefault();
+
+  if (event.key === "ArrowUp") {
+    if (commandHistoryIndex.value === -1) {
+      commandDraft.value = command.value;
+      commandHistoryIndex.value = commandHistory.value.length - 1;
+    } else if (commandHistoryIndex.value > 0) {
+      commandHistoryIndex.value -= 1;
+    }
+
+    command.value = commandHistory.value[commandHistoryIndex.value];
+    setTypingState();
+    await moveCaretToCommandEnd();
+    return;
+  }
+
+  if (commandHistoryIndex.value === -1) {
+    return;
+  }
+
+  if (commandHistoryIndex.value < commandHistory.value.length - 1) {
+    commandHistoryIndex.value += 1;
+    command.value = commandHistory.value[commandHistoryIndex.value];
+  } else {
+    commandHistoryIndex.value = -1;
+    command.value = commandDraft.value;
+  }
+
+  setTypingState();
+  await moveCaretToCommandEnd();
+};
+
+const handleAvatarMouseEnter = () => {
+  isAvatarHovered.value = true;
+};
+
+const handleAvatarMouseLeave = () => {
+  isAvatarHovered.value = false;
+  mouseX.value = 0;
+  mouseY.value = 0;
 };
 
 const appendEntry = (type: EntryType, text: string) => {
@@ -547,7 +651,7 @@ const runOverloadSequence = async () => {
   avatarState.value = "success";
   appendEntry("system", "> [System] ...rebooting. All systems restored. V is back online.");
   setSpeech("Hey! Welcome back. That was all just a joke, I promise.");
-  scheduleIdle(4000);
+  scheduleWatching(4000);
 };
 
 const handleCommand = (rawCommand: string) => {
@@ -559,9 +663,9 @@ const handleCommand = (rawCommand: string) => {
   appendEntry("user", `guest@ruiding-feng:~$ ${rawCommand}`);
 
   if (normalized === "clear") {
-    history.value = [];
+    history.value = initialHistory();
     command.value = "";
-    avatarState.value = "idle";
+    avatarState.value = "watching";
     focusInput();
     return;
   }
@@ -578,7 +682,7 @@ const handleCommand = (rawCommand: string) => {
     );
     avatarState.value = "success";
     glitchLevel.value = Math.max(glitchLevel.value, 0.28);
-    scheduleIdle();
+    scheduleWatching();
     command.value = "";
     return;
   }
@@ -588,7 +692,7 @@ const handleCommand = (rawCommand: string) => {
     setSpeech("Scanning... You look interesting. Access granted.");
     avatarState.value = "scan";
     glitchLevel.value = Math.max(glitchLevel.value, 0.85);
-    scheduleIdle(4000);
+    scheduleWatching(4000);
     command.value = "";
     return;
   }
@@ -604,7 +708,7 @@ const handleCommand = (rawCommand: string) => {
     setSpeech("Permission denied. Only I have root access here.");
     avatarState.value = "error";
     glitchLevel.value = Math.max(glitchLevel.value, 0.42);
-    scheduleIdle();
+    scheduleWatching();
     command.value = "";
     return;
   }
@@ -622,7 +726,7 @@ const handleCommand = (rawCommand: string) => {
     avatarState.value = "error";
     creepLevel.value = Math.max(creepLevel.value, 1);
     glitchLevel.value = Math.max(glitchLevel.value, 1);
-    scheduleIdle();
+    scheduleWatching();
     command.value = "";
     return;
   }
@@ -646,7 +750,7 @@ const handleCommand = (rawCommand: string) => {
     if (normalized === "scan") {
       avatarState.value = "scan";
     }
-    scheduleIdle();
+    scheduleWatching();
     command.value = "";
     return;
   }
@@ -658,12 +762,17 @@ Type "help" to see available commands.`
   );
   setSpeech('Unknown command. Try "help".');
   avatarState.value = "error";
-  scheduleIdle();
+  scheduleWatching();
   command.value = "";
 };
 
 const submitCommand = () => {
   const raw = command.value;
+  if (raw.trim()) {
+    commandHistory.value.push(raw);
+  }
+  commandHistoryIndex.value = -1;
+  commandDraft.value = "";
   handleCommand(raw);
 };
 
@@ -679,7 +788,7 @@ const handleAvatarClick = () => {
     setSpeech("I am V, a sentient agent created by Ruiding Feng.");
     avatarState.value = "success";
     glitchLevel.value = Math.max(glitchLevel.value, 0.25);
-    scheduleIdle();
+    scheduleWatching();
     return;
   }
 
@@ -713,16 +822,16 @@ const handleAvatarClick = () => {
   }
 
   if (logIndex >= 20 && logIndex < 25) {
-    scheduleIdle(3600);
+    scheduleWatching(3600);
     return;
   }
 
   if (logIndex >= 10) {
-    scheduleIdle(2500);
+    scheduleWatching(2500);
     return;
   }
 
-  scheduleIdle(2500);
+  scheduleWatching(2500);
 };
 
 const drawAvatar = () => {
@@ -788,11 +897,13 @@ const drawAvatar = () => {
     ctx.fillStyle = "#050505";
     ctx.fillRect(0, 0, width, height);
 
+    /*
     const vignette = ctx.createRadialGradient(500, 280, 80, 500, 420, 520);
     vignette.addColorStop(0, "rgba(255,255,255,0.05)");
     vignette.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = vignette;
     ctx.fillRect(0, 0, width, height);
+    */
 
     ctx.save();
     const jitter = glitchLevel.value > 0.2 ? (Math.random() - 0.5) * glitchLevel.value * 16 : 0;
@@ -1042,6 +1153,7 @@ const drawAvatar = () => {
       }
     }
 
+    /*
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(500 + visorTiltX, 185 + visorTiltY);
@@ -1062,6 +1174,7 @@ const drawAvatar = () => {
     ctx.lineTo(750 + mx * 10, 400 + my * 16);
     ctx.fill();
     ctx.restore();
+    */
     ctx.restore();
 
     let imageData = ctx.getImageData(0, 0, width, height);
@@ -1112,10 +1225,25 @@ const drawAvatar = () => {
       }
     }
 
+    if (isAvatarHovered.value) {
+      const scanY = (tick * 4) % height;
+      const scanGradient = ctx.createLinearGradient(0, scanY - 6, 0, scanY + 6);
+      scanGradient.addColorStop(0, "rgba(235,235,235,0)");
+      scanGradient.addColorStop(0.42, "rgba(235,235,235,0.03)");
+      scanGradient.addColorStop(0.5, "rgba(235,235,235,0.18)");
+      scanGradient.addColorStop(0.58, "rgba(235,235,235,0.03)");
+      scanGradient.addColorStop(1, "rgba(235,235,235,0)");
+      ctx.fillStyle = scanGradient;
+      ctx.fillRect(0, scanY - 6, width, 12);
+
+      ctx.fillStyle = "rgba(235,235,235,0.22)";
+      ctx.fillRect(0, scanY, width, 1);
+    }
+
     context.clearRect(0, 0, width, height);
     context.fillStyle = "#050505";
     context.fillRect(0, 0, width, height);
-    context.imageSmoothingEnabled = false;
+    context.imageSmoothingEnabled = true;
     context.drawImage(buffer, 0, 0, width, height);
 
     glitchLevel.value = Math.max(0, glitchLevel.value - 0.03);
@@ -1134,21 +1262,8 @@ watch(
   { deep: true }
 );
 
-watch(command, () => {
-  if (command.value) {
-    avatarState.value = "typing";
-    return;
-  }
-
-  window.clearTimeout(idleTimeout);
-  idleTimeout = window.setTimeout(() => {
-    if (!command.value && avatarState.value === "typing") {
-      avatarState.value = "idle";
-    }
-  }, 220);
-});
-
 onMounted(() => {
+  history.value = ensureAsciiHistoryEntry(history.value);
   focusInput();
   drawAvatar();
 
@@ -1181,7 +1296,8 @@ onBeforeUnmount(() => {
     window.removeEventListener("mousemove", handleMouseMove);
   }
   window.clearTimeout(speechTimeout);
-  window.clearTimeout(idleTimeout);
+  window.clearTimeout(watchingTimeout);
+  window.clearTimeout(typingTimeout);
   window.clearTimeout(teaseTimeout);
   window.cancelAnimationFrame(animationFrame);
 });
@@ -1213,8 +1329,8 @@ onBeforeUnmount(() => {
           <span class="resume-title">RESUME - RUIDING FENG</span>
           <div class="resume-actions">
             <a
-              href="/Resume_Ruiding_Feng.pdf"
-              download="Resume_Ruiding_Feng.pdf"
+              :href="resumeFilePath"
+              :download="resumeFileName"
               class="resume-btn resume-btn--download"
             >
               [ DOWNLOAD ]
@@ -1225,7 +1341,7 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <iframe
-          src="/Resume_Ruiding_Feng.pdf"
+          :src="resumeFilePath"
           class="resume-iframe"
           title="Resume Preview"
         ></iframe>
@@ -1321,15 +1437,19 @@ onBeforeUnmount(() => {
           </div>
 
           <div class="terminal-history">
-            <template v-for="(entry, index) in history" :key="`${entry.type}-${index}-${entry.text}`">
-              <div v-if="entry.type === 'ascii'" class="ascii-wrap">
-                <pre class="ascii-art">{{ entry.text }}</pre>
-              </div>
-              <div v-else :class="['history-entry', outputClass(entry.type)]">
-                {{ entry.text }}
-              </div>
-            </template>
-            <div ref="terminalEndRef"></div>
+            <div class="terminal-history-scroll">
+              <template v-for="(entry, index) in visibleHistory" :key="`${entry.type}-${index}-${entry.text}`">
+                <div v-if="entry.type === 'ascii'" class="history-ascii">
+                  <div class="ascii-wrap">
+                    <pre class="ascii-art">{{ entry.text }}</pre>
+                  </div>
+                </div>
+                <div v-else :class="['history-entry', outputClass(entry.type)]">
+                  {{ entry.text }}
+                </div>
+              </template>
+              <div ref="terminalEndRef"></div>
+            </div>
           </div>
 
           <form class="command-line" @submit.prevent="submitCommand">
@@ -1337,6 +1457,8 @@ onBeforeUnmount(() => {
             <input
               ref="inputRef"
               v-model="command"
+              @input="handleCommandInput"
+              @keydown="handleCommandNavigation"
               class="command-input"
               type="text"
               spellcheck="false"
@@ -1347,7 +1469,13 @@ onBeforeUnmount(() => {
           </form>
         </section>
 
-        <section ref="avatarPanelRef" class="panel avatar-panel" @click="handleAvatarClick">
+        <section
+          ref="avatarPanelRef"
+          class="panel avatar-panel"
+          @click="handleAvatarClick"
+          @mouseenter="handleAvatarMouseEnter"
+          @mouseleave="handleAvatarMouseLeave"
+        >
           <canvas ref="avatarCanvasRef" class="avatar-canvas" title="Click to interact with the Cyber-Unit"></canvas>
           <div class="status-chip">{{ statusBadgeText }}</div>
           <div v-if="speech" class="speech-bubble">
