@@ -1271,12 +1271,13 @@ onBeforeUnmount(() => {
           [ GITHUB ]
         </a>
         <a
-          href="https://github.com/VectorRobotics/vector-os-nano"
+          href="/Resume_Ruiding_Feng.pdf"
           target="_blank"
           rel="noopener noreferrer"
+          download="Resume_Ruiding_Feng.pdf"
           class="topbar-link"
         >
-          [ VECTOR OS ]
+          [ RESUME ]
         </a>
         <a
           href="https://www.linkedin.com/in/ruiding-feng-552640268/"
