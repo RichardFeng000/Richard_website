@@ -1274,7 +1274,6 @@ onBeforeUnmount(() => {
           href="/Resume_Ruiding_Feng.pdf"
           target="_blank"
           rel="noopener noreferrer"
-          download="Resume_Ruiding_Feng.pdf"
           class="topbar-link"
         >
           [ RESUME ]
