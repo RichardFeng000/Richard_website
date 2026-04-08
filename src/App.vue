@@ -8,6 +8,7 @@ type AvatarState = "watching" | "typing" | "success" | "error" | "scan";
 interface HistoryEntry {
   type: EntryType;
   text: string;
+  commandId?: string;
 }
 
 type OverloadStage =
@@ -29,6 +30,35 @@ interface OverloadOverlayState {
 
 const resumeFileName = "Resume_Ruiding_Feng.pdf";
 const resumeFilePath = resumeFileUrl;
+const resumeContactEmail = "frd1976311597@gmail.com";
+const resumeSourceLabel = "source://profile-node";
+const externalLinks = [
+  {
+    label: "[GitHub]",
+    href: "https://github.com/fengruiding",
+    displayText: "github.com/fengruiding",
+  },
+  {
+    label: "[Vector OS]",
+    href: "https://github.com/VectorRobotics/vector-os-nano",
+    displayText: "github.com/VectorRobotics/vector-os-nano",
+  },
+  {
+    label: "[VectorOrg]",
+    href: "https://github.com/VectorRobotics",
+    displayText: "github.com/VectorRobotics",
+  },
+  {
+    label: "[LinkedIn]",
+    href: "https://www.linkedin.com/in/ruiding-feng-552640268/",
+    displayText: "linkedin.com/in/ruiding-feng-552640268",
+  },
+  {
+    label: "[Email]",
+    href: "mailto:frd1976311597@gmail.com",
+    displayText: "frd1976311597@gmail.com",
+  },
+] as const;
 
 const asciiArt = `
 ██████╗ ██╗   ██╗██╗██████╗ ██╗███╗   ██╗ ██████╗
@@ -156,8 +186,8 @@ Cross-embodiment robot operating system.
        This site — cyberpunk terminal portfolio with Bayer dithering`,
   resume: `RESUME:
   Status: Available upon request.
-  Contact: ruiding.feng@example.com
-  LinkedIn: linkedin.com/in/ruiding-feng-552640268`,
+  Contact: frd1976311597@gmail.com
+  Source: source://profile-node`,
   contact: `CONTACT INFORMATION:
   Email:    ruiding.feng@example.com
   GitHub:   github.com/fengruiding
@@ -168,7 +198,7 @@ Cross-embodiment robot operating system.
   [Vector OS]  github.com/VectorRobotics/vector-os-nano
   [VectorOrg]  github.com/VectorRobotics
   [LinkedIn]   linkedin.com/in/ruiding-feng-552640268
-  [Email]      ruiding.feng@example.com`,
+  [Email]      frd1976311597@gmail.com`,
   scan: `INITIATING FULL SPECTRUM SCAN...
 > Scanning visitor biometrics.......... DONE
 > Analyzing neural pattern............. DONE
@@ -449,18 +479,52 @@ const handleCommandInput = () => {
   setTypingState();
 };
 
-const moveCaretToCommandEnd = async () => {
+const moveCaretToCommandPosition = async (position: number) => {
   await nextTick();
   const input = inputRef.value;
   if (!input) {
     return;
   }
 
-  const position = input.value.length;
   input.setSelectionRange(position, position);
 };
 
+const moveCaretToCommandEnd = async () => moveCaretToCommandPosition(command.value.length);
+
 const handleCommandNavigation = async (event: KeyboardEvent) => {
+  if (event.ctrlKey && !event.metaKey && !event.altKey && event.key.toLowerCase() === "a") {
+    event.preventDefault();
+    await moveCaretToCommandPosition(0);
+    return;
+  }
+
+  if (event.ctrlKey && !event.metaKey && !event.altKey && event.key.toLowerCase() === "e") {
+    event.preventDefault();
+    await moveCaretToCommandEnd();
+    return;
+  }
+
+  if (event.ctrlKey && !event.metaKey && !event.altKey && event.key.toLowerCase() === "u") {
+    event.preventDefault();
+    command.value = "";
+    commandDraft.value = "";
+    commandHistoryIndex.value = -1;
+    setTypingState();
+    await moveCaretToCommandEnd();
+    return;
+  }
+
+  if (event.ctrlKey && !event.metaKey && !event.altKey && event.key.toLowerCase() === "l") {
+    event.preventDefault();
+    history.value = initialHistory();
+    command.value = "";
+    commandDraft.value = "";
+    commandHistoryIndex.value = -1;
+    avatarState.value = "watching";
+    await moveCaretToCommandPosition(0);
+    return;
+  }
+
   if (event.key !== "ArrowUp" && event.key !== "ArrowDown") {
     return;
   }
@@ -511,8 +575,26 @@ const handleAvatarMouseLeave = () => {
   mouseY.value = 0;
 };
 
-const appendEntry = (type: EntryType, text: string) => {
-  history.value = [...history.value, { type, text }];
+const appendEntry = (type: EntryType, text: string, commandId?: string) => {
+  history.value = [...history.value, { type, text, commandId }];
+};
+
+const handleTerminalPanelClick = (event: MouseEvent) => {
+  const selection = window.getSelection()?.toString().trim();
+  if (selection) {
+    return;
+  }
+
+  const target = event.target;
+  if (target instanceof Element && target.closest(".terminal-history-scroll")) {
+    return;
+  }
+
+  focusInput();
+};
+
+const openResumeViewer = () => {
+  showResume.value = true;
 };
 
 const shakeViewport = (intensity: number, duration: number) => {
@@ -732,7 +814,11 @@ const handleCommand = (rawCommand: string) => {
   }
 
   if (commandResponses[normalized]) {
-    appendEntry("output", commandResponses[normalized]);
+    appendEntry(
+      "output",
+      commandResponses[normalized],
+      normalized === "resume" || normalized === "links" ? normalized : undefined
+    );
 
     if (normalized === "about") {
       setSpeech("Nice to meet you. I build robots that think and act.");
@@ -1430,7 +1516,7 @@ onBeforeUnmount(() => {
       </header>
 
       <section class="panels">
-        <section class="panel terminal-panel" @click="focusInput">
+        <section class="panel terminal-panel" @click="handleTerminalPanelClick">
           <div class="panel-head">
             <span class="panel-title">RUIDING_OS_v6.0</span>
             <span class="panel-state">Status: ONLINE</span>
@@ -1442,6 +1528,39 @@ onBeforeUnmount(() => {
                 <div v-if="entry.type === 'ascii'" class="history-ascii">
                   <div class="ascii-wrap">
                     <pre class="ascii-art">{{ entry.text }}</pre>
+                  </div>
+                </div>
+                <div v-else-if="entry.commandId === 'resume'" :class="['history-entry', outputClass(entry.type)]">
+                  <div class="terminal-resume-card">
+                    <div>RESUME:</div>
+                    <div>  Status: Available upon request.</div>
+                    <div>  Contact: {{ resumeContactEmail }}</div>
+                    <div>
+                      <span>  Source: </span>
+                      <button class="terminal-inline-link" type="button" @click="openResumeViewer">
+                        {{ resumeSourceLabel }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div v-else-if="entry.commandId === 'links'" :class="['history-entry', outputClass(entry.type)]">
+                  <div class="terminal-links-card">
+                    <div>EXTERNAL LINKS:</div>
+                    <div
+                      v-for="link in externalLinks"
+                      :key="link.label"
+                      class="terminal-links-row"
+                    >
+                      <span class="terminal-links-label">{{ link.label }}</span>
+                      <a
+                        class="terminal-external-link"
+                        :href="link.href"
+                        :target="link.href.startsWith('mailto:') ? undefined : '_blank'"
+                        :rel="link.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'"
+                      >
+                        {{ link.displayText }}
+                      </a>
+                    </div>
                   </div>
                 </div>
                 <div v-else :class="['history-entry', outputClass(entry.type)]">
