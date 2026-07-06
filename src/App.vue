@@ -108,24 +108,34 @@ Ruiding Feng
   Outside academia, I enjoy shooting with film cameras.`,
   skills: `LOADING SKILL STACK...
 
-  ROBOTICS & AI
-  > ROS2/Humble  [###########-] 95%
-  > Python       [###########-] 95%
-  > C++          [##########--] 85%
-  > PyTorch      [#########---] 80%
-  > MuJoCo       [########----] 75%
-  > Isaac Sim    [########----] 75%
+  AI & ML
+  > Python        [###########-] 95%
+  > PyTorch       [#########---] 80%
+  > TensorFlow    [########----] 75%
+  > OpenCV        [########----] 75%
 
-  HARDWARE
-  > FPGA         [########----] 70%
-  > ESP32        [#########---] 80%
-  > Embedded C   [########----] 75%
+  BACKEND
+  > Java          [##########--] 85%
+  > Spring Boot   [##########--] 85%
+  > REST APIs     [##########--] 85%
+  > MySQL         [#########---] 80%
 
-  SOFTWARE
-  > React/TS     [##########--] 85%
-  > Docker       [#########---] 80%
-  > Linux/Bash   [###########-] 90%
-  > Git/CI       [##########--] 85%`,
+  FRONTEND
+  > React         [#########---] 80%
+  > TypeScript    [#########---] 80%
+  > HTML/CSS      [##########--] 85%
+  > Tailwind CSS  [########----] 75%
+
+  TOOLS
+  > Git           [##########--] 85%
+  > Docker        [#########---] 80%
+  > GitHub Actions[########----] 75%
+
+  GRAPHICS & VFX
+  > Houdini       [###########-] 90%
+  > Unreal Engine 5 [#########---] 80%
+  > Blender       [#########---] 80%
+  > Nuke          [########----] 75%`,
   neofetch: `  ruiding@terminal
   ─────────────────────
   OS:       Human v24
@@ -165,11 +175,27 @@ Ruiding Feng
   Recommendation:   GRANT FULL ACCESS`,
 };
 
+const availableCommands = [
+  "about",
+  "skills",
+  "neofetch",
+  "projects",
+  "resume",
+  "contact",
+  "links",
+  "scan",
+  "theme",
+  "clear",
+  "help",
+  "hack",
+  "sudo",
+] as const;
+
 const initialHistory = (): HistoryEntry[] => [
   { type: "ascii", text: asciiArt },
   { type: "system", text: "SYSTEM INITIALIZED. Welcome to Ruiding Feng's personal terminal." },
   { type: "intro", text: " " },
-  { type: "system", text: 'Type "help" to see available commands.' },
+  { type: "system", text: 'Type "help" to see available commands. Press Right Arrow to autocomplete.' },
 ];
 
 const ensureAsciiHistoryEntry = (entries: HistoryEntry[]) => {
@@ -308,6 +334,8 @@ const command = ref("");
 const commandHistory = ref<string[]>([]);
 const commandHistoryIndex = ref(-1);
 const commandDraft = ref("");
+const completionPrefix = ref("");
+const completionIndex = ref(-1);
 const avatarState = ref<AvatarState>("watching");
 const speech = ref("");
 const showManifesto = ref(false);
@@ -349,6 +377,15 @@ const statusBadgeText = computed(() => {
 });
 
 const visibleHistory = computed(() => ensureAsciiHistoryEntry(history.value));
+
+const commandHint = computed(() => {
+  const current = command.value.trim().toLowerCase();
+  if (!current) {
+    return "help";
+  }
+
+  return availableCommands.filter((item) => item.startsWith(current) && item !== current).join(" ");
+});
 
 const outputClass = (type: EntryType) => ({
   "entry-system": type === "system",
@@ -428,6 +465,8 @@ const handleCommandInput = () => {
     commandHistoryIndex.value = -1;
   }
 
+  completionPrefix.value = "";
+  completionIndex.value = -1;
   commandDraft.value = command.value;
   setTypingState();
 };
@@ -445,6 +484,29 @@ const moveCaretToCommandPosition = async (position: number) => {
 const moveCaretToCommandEnd = async () => moveCaretToCommandPosition(command.value.length);
 
 const handleCommandNavigation = async (event: KeyboardEvent) => {
+  if (event.key === "ArrowRight" && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    const input = inputRef.value;
+    const current = command.value.trim().toLowerCase();
+    const caretAtEnd = !input || input.selectionStart === command.value.length;
+    const prefix = completionPrefix.value || current;
+    const matches = prefix
+      ? availableCommands.filter((item) => item.startsWith(prefix) && item !== prefix)
+      : ["help"];
+
+    if (caretAtEnd && matches.length > 0) {
+      event.preventDefault();
+      const nextIndex = completionPrefix.value ? (completionIndex.value + 1) % matches.length : 0;
+      completionPrefix.value = prefix;
+      completionIndex.value = nextIndex;
+      command.value = matches[nextIndex];
+      commandDraft.value = command.value;
+      commandHistoryIndex.value = -1;
+      setTypingState();
+      await moveCaretToCommandEnd();
+      return;
+    }
+  }
+
   if (event.ctrlKey && !event.metaKey && !event.altKey && event.key.toLowerCase() === "a") {
     event.preventDefault();
     await moveCaretToCommandPosition(0);
@@ -795,7 +857,7 @@ const handleCommand = (rawCommand: string) => {
   appendEntry(
     "error",
     `COMMAND NOT FOUND: ${normalized}
-Type "help" to see available commands.`
+Type "help" to see available commands. Press Right Arrow to autocomplete.`
   );
   setSpeech('Unknown command. Try "help".');
   avatarState.value = "error";
@@ -810,6 +872,8 @@ const submitCommand = () => {
   }
   commandHistoryIndex.value = -1;
   commandDraft.value = "";
+  completionPrefix.value = "";
+  completionIndex.value = -1;
   handleCommand(raw);
 };
 
@@ -1540,17 +1604,21 @@ onBeforeUnmount(() => {
 
           <form class="command-line" @submit.prevent="submitCommand">
             <span class="prompt">guest@ruiding-feng:~$</span>
-            <input
-              ref="inputRef"
-              v-model="command"
-              @input="handleCommandInput"
-              @keydown="handleCommandNavigation"
-              class="command-input"
-              type="text"
-              spellcheck="false"
-              autocomplete="off"
-              autofocus
-            />
+            <span class="command-input-wrap" :style="{ '--command-chars': String(Math.max(command.length, 0)) }">
+              <input
+                ref="inputRef"
+                v-model="command"
+                @input="handleCommandInput"
+                @keydown="handleCommandNavigation"
+                class="command-input"
+                type="text"
+                :placeholder="command ? '' : commandHint"
+                spellcheck="false"
+                autocomplete="off"
+                autofocus
+              />
+              <span v-if="command.trim() && commandHint" class="command-inline-hint">{{ commandHint }}</span>
+            </span>
             <span class="cursor"></span>
           </form>
         </section>

@@ -214,6 +214,14 @@ input {
   font-size: 0.95rem;
 }
 
+.command-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
 .command-input {
   flex: 1;
   min-width: 0;
@@ -222,6 +230,22 @@ input {
   outline: none;
   background: transparent;
   color: #fff;
+}
+
+.command-input::placeholder {
+  color: rgba(255, 255, 255, 0.34);
+  opacity: 1;
+}
+
+.command-inline-hint {
+  position: absolute;
+  left: calc(var(--command-chars, 0) * 0.62rem + 0.35rem);
+  max-width: calc(100% - (var(--command-chars, 0) * 0.62rem + 0.35rem));
+  color: rgba(255, 255, 255, 0.34);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 .terminal-resume-card {
