@@ -36,19 +36,13 @@ interface OverloadOverlayState {
 
 const resumeFileName = "Resume_Ruiding_Feng.pdf";
 const resumeFilePath = resumeFileUrl;
-const resumeContactEmail = "frd1976311597@gmail.com";
+const resumeContactEmail = "rf711@scarletmail.rutgers.edu";
 const resumeSourceLabel = "source://profile-node";
 const externalLinks = [
   {
     label: "[GitHub]",
-    href: "https://github.com/fengruiding",
-    displayText: "github.com/fengruiding",
-  },
-
-  {
-    label: "[VectorOrg]",
-    href: "https://github.com/VectorRobotics",
-    displayText: "github.com/VectorRobotics",
+    href: "https://github.com/RichardFeng000/",
+    displayText: "github.com/RichardFeng000",
   },
   {
     label: "[LinkedIn]",
@@ -57,8 +51,8 @@ const externalLinks = [
   },
   {
     label: "[Email]",
-    href: "mailto:frd1976311597@gmail.com",
-    displayText: "frd1976311597@gmail.com",
+    href: "mailto:rf711@scarletmail.rutgers.edu",
+    displayText: "rf711@scarletmail.rutgers.edu",
   },
 ] as const;
 
@@ -142,26 +136,23 @@ Ruiding Feng
   Terminal: This one :)
   CPU:      Caffeinated Neural Net
   GPU:      Isaac Sim + MuJoCo
-  Memory:   Lots of papers
-  Org:      Vector Robotics (Co-founder)`,
+  Memory:   Lots of papers`,
 
   projects: `ALL PROJECTS:
 
   [01] Affordance2Action: Task-Conditioned Scene-Level Affordance Grounding for Real-Time Manipulation`,
   resume: `RESUME:
   Status: Available upon request.
-  Contact: frd1976311597@gmail.com
+  Contact: rf711@scarletmail.rutgers.edu
   Source: source://profile-node`,
   contact: `CONTACT INFORMATION:
-  Email:    ruiding.feng@example.com
-  GitHub:   github.com/fengruiding
-  LinkedIn: linkedin.com/in/ruiding-feng-552640268
-  Org:      github.com/VectorRobotics`,
+  Email:    rf711@scarletmail.rutgers.edu
+  GitHub:   github.com/RichardFeng000
+  LinkedIn: linkedin.com/in/ruiding-feng-552640268`,
   links: `EXTERNAL LINKS:
-  [GitHub]     github.com/fengruiding
-  [VectorOrg]  github.com/VectorRobotics
+  [GitHub]     github.com/RichardFeng000
   [LinkedIn]   linkedin.com/in/ruiding-feng-552640268
-  [Email]      frd1976311597@gmail.com`,
+  [Email]      rf711@scarletmail.rutgers.edu`,
   scan: `INITIATING FULL SPECTRUM SCAN...
 > Scanning visitor biometrics.......... DONE
 > Analyzing neural pattern............. DONE
@@ -1451,7 +1442,7 @@ onBeforeUnmount(() => {
       <header class="topbar">
         <a href="#" class="topbar-link" @click.prevent="showManifesto = true">[ ABOUT ME ]</a>
         <a
-          href="https://github.com/fengruiding"
+          href="https://github.com/RichardFeng000/"
           target="_blank"
           rel="noopener noreferrer"
           class="topbar-link"

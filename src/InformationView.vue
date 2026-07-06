@@ -39,12 +39,12 @@ const scrollTo = (id: string) => {
           <ul class="profile-links">
             <li><i class="loc-icon">📍</i> China / Remote</li>
             <li>
-              <a href="mailto:frd1976311597@gmail.com">
+              <a href="mailto:rf711@scarletmail.rutgers.edu">
                 <i class="link-icon">✉️</i> Email
               </a>
             </li>
             <li>
-              <a href="https://github.com/fengruiding" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/RichardFeng000/" target="_blank" rel="noopener noreferrer">
                 <i class="link-icon">⭐</i> GitHub
               </a>
             </li>
@@ -102,10 +102,10 @@ const scrollTo = (id: string) => {
             <h1>Contact</h1>
             <ul>
               <li>
-                <a href="mailto:frd1976311597@gmail.com">frd1976311597@gmail.com</a>
+                <a href="mailto:rf711@scarletmail.rutgers.edu">rf711@scarletmail.rutgers.edu</a>
               </li>
               <li>
-                <a href="https://github.com/fengruiding" target="_blank" rel="noopener noreferrer">github.com/fengruiding</a>
+                <a href="https://github.com/RichardFeng000/" target="_blank" rel="noopener noreferrer">github.com/RichardFeng000</a>
               </li>
               <li>
                 <a href="https://www.linkedin.com/in/ruiding-feng-552640268/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
