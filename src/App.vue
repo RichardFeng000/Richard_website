@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import InformationView from "./InformationView.vue";
 import resumeFileUrl from "../materials/Resume_Ruiding_Feng.pdf?url";
+
+const isInformationPage =
+  window.location.pathname === "/information" ||
+  window.location.pathname === "/information/" ||
+  window.location.pathname.endsWith("/information/index.html");
 
 type EntryType = "ascii" | "system" | "intro" | "user" | "output" | "error";
 type AvatarState = "watching" | "typing" | "success" | "error" | "scan";
@@ -38,11 +44,7 @@ const externalLinks = [
     href: "https://github.com/fengruiding",
     displayText: "github.com/fengruiding",
   },
-  {
-    label: "[Vector OS]",
-    href: "https://github.com/VectorRobotics/vector-os-nano",
-    displayText: "github.com/VectorRobotics/vector-os-nano",
-  },
+
   {
     label: "[VectorOrg]",
     href: "https://github.com/VectorRobotics",
@@ -78,7 +80,6 @@ const commandResponses: Record<string, string> = {
   neofetch   - System info summary
 
   WORK
-  vectoros   - Vector OS Nano project
   projects   - View all projects
   resume     - Download resume
 
@@ -93,23 +94,24 @@ const commandResponses: Record<string, string> = {
   sudo       - ???
   hack       - ???`,
   about: `ABOUT ME:
-Ruiding Feng — Focused on robotic virtual simulation and real-world implementation.
-Co-founder of Vector Robotics. Building Vector OS Nano.
-
-  > Perception  — Computer vision, LiDAR, sensor fusion
-  > Planning    — Motion planning, task scheduling, SLAM
-  > Control     — Real-time C++ controllers, ROS2 lifecycle nodes
-  > Hardware    — AI + Hardware co-design, embedded systems
-  > Web/Cloud   — React, Node.js, Docker, CI/CD pipelines
+Ruiding Feng
 
   ───────────────────────────────────────────
 
-  "What iron hands shall till the earth,
-   That flesh and bone may know its worth?
-   Let steel awake, let circuits sing,
-   A paradise of our engineering.
-   Not gods, but makers: we shall raise
-   A world set free from mortal days."`,
+  Core fields:
+  > Computer Vision
+  > Robotics
+
+  I am Ruiding Feng, a graduate student in Computer Science
+  at Rutgers University.
+
+  My research interests include computer vision and robotics.
+
+  Before Rutgers, I received my B.A. in Computer Science and
+  Mathematics from Boston University and spent a year studying
+  Visual Effects at SCAD.
+
+  Outside academia, I enjoy shooting with film cameras.`,
   skills: `LOADING SKILL STACK...
 
   ROBOTICS & AI
@@ -141,49 +143,11 @@ Co-founder of Vector Robotics. Building Vector OS Nano.
   CPU:      Caffeinated Neural Net
   GPU:      Isaac Sim + MuJoCo
   Memory:   Lots of papers
-  Org:      Vector Robotics (Co-founder)
-  Project:  Vector OS Nano`,
-  vectoros: `VECTOR OS NANO
-══════════════════════════════════════════════
+  Org:      Vector Robotics (Co-founder)`,
 
-Cross-embodiment robot operating system.
-
-  Status:    ACTIVE DEVELOPMENT
-  Role:      Co-founder & Builder
-  Org:       github.com/VectorRobotics
-  Repo:      github.com/VectorRobotics/vector-os-nano
-
-  Features:
-  > Industrial-grade autonomous navigation
-  > Natural language control interface
-  > Sim-to-real transfer pipeline
-  > Multi-embodiment support
-
-  Hardware:  Unitree Go2 + SO-ARM101
-  Stack:     ROS2 Humble / MuJoCo / Isaac Sim
-  Origin:    Independent Project
-
-  Visit: https://github.com/VectorRobotics/vector-os-nano`,
   projects: `ALL PROJECTS:
 
-  [01] Vector OS Nano         (type "vectoros" for details)
-       Cross-embodiment robot OS — autonomous nav + NL control
-       github.com/VectorRobotics/vector-os-nano
-
-  [02] Vector Robotics Core
-       General-purpose agentic robotics system (Ubuntu + ROS2)
-       github.com/fengruiding/vector-robotics-core
-
-  [03] G1 Locomotion
-       End-to-end humanoid locomotion & manipulation
-       github.com/fengruiding/G1-end-to-end-locomotion-manipulation
-
-  [04] OpenClaw Dashboard
-       Terminal-aesthetic real-time agent monitoring panel
-       github.com/fengruiding/openclaw-dashboard
-
-  [05] TermFolio
-       This site — cyberpunk terminal portfolio with Bayer dithering`,
+  [01] Affordance2Action: Task-Conditioned Scene-Level Affordance Grounding for Real-Time Manipulation`,
   resume: `RESUME:
   Status: Available upon request.
   Contact: frd1976311597@gmail.com
@@ -195,7 +159,6 @@ Cross-embodiment robot operating system.
   Org:      github.com/VectorRobotics`,
   links: `EXTERNAL LINKS:
   [GitHub]     github.com/fengruiding
-  [Vector OS]  github.com/VectorRobotics/vector-os-nano
   [VectorOrg]  github.com/VectorRobotics
   [LinkedIn]   linkedin.com/in/ruiding-feng-552640268
   [Email]      frd1976311597@gmail.com`,
@@ -214,8 +177,7 @@ Cross-embodiment robot operating system.
 const initialHistory = (): HistoryEntry[] => [
   { type: "ascii", text: asciiArt },
   { type: "system", text: "SYSTEM INITIALIZED. Welcome to Ruiding Feng's personal terminal." },
-  { type: "intro", text: "Robotics Virtual Simulation + Real-World Implementation" },
-  { type: "intro", text: "Building robot simulation pipelines and real-world systems." },
+  { type: "intro", text: " " },
   { type: "system", text: 'Type "help" to see available commands.' },
 ];
 
@@ -366,7 +328,7 @@ const creepLevel = ref(0);
 const glitchLevel = ref(0);
 const avatarClickCount = ref(0);
 
-const terminalEndRef = ref<HTMLElement | null>(null);
+const terminalScrollRef = ref<HTMLElement | null>(null);
 const inputRef = ref<HTMLInputElement | null>(null);
 const avatarCanvasRef = ref<HTMLCanvasElement | null>(null);
 const avatarPanelRef = ref<HTMLElement | null>(null);
@@ -817,17 +779,15 @@ const handleCommand = (rawCommand: string) => {
     appendEntry(
       "output",
       commandResponses[normalized],
-      normalized === "resume" || normalized === "links" ? normalized : undefined
+      normalized === "resume" || normalized === "links" || normalized === "projects" ? normalized : undefined
     );
 
     if (normalized === "about") {
       setSpeech("Nice to meet you. I build robots that think and act.");
     } else if (normalized === "skills") {
       setSpeech("My stack goes from silicon to cloud. Full vertical.");
-    } else if (normalized === "vectoros") {
-      setSpeech("Vector OS is my primary project. A real robot operating system.");
     } else if (normalized === "help") {
-      setSpeech('Here are all the commands. Try "about" or "vectoros".');
+      setSpeech('Here are all the commands. Try "about" or "projects".');
     } else {
       setSpeech("Command executed.");
     }
@@ -1343,7 +1303,10 @@ watch(
   history,
   async () => {
     await nextTick();
-    terminalEndRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
+    const scrollEl = terminalScrollRef.value;
+    if (scrollEl) {
+      scrollEl.scrollTop = scrollEl.scrollHeight;
+    }
   },
   { deep: true }
 );
@@ -1390,20 +1353,17 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div :class="['app-shell', { 'app-shell--overload': isOverloadRunning }]">
+  <InformationView v-if="isInformationPage" />
+  <div v-else :class="['app-shell', { 'app-shell--overload': isOverloadRunning }]">
     <div v-if="crtEnabled" class="crt-overlay"></div>
     <div v-if="crtEnabled" class="crt-flicker"></div>
 
     <div v-if="showManifesto" class="modal-backdrop" @click="showManifesto = false">
       <div class="manifesto-card" @click.stop>
-        <div class="manifesto-label">The Manifesto</div>
+        <div class="manifesto-label">About</div>
         <div class="manifesto-copy">
-          "What iron hands shall till the earth,<br />
-          That flesh and bone may know its worth?<br />
-          Let steel awake, let circuits sing,<br />
-          A paradise of our engineering.<br />
-          Not gods, but makers: we shall raise<br />
-          A world set free from mortal days."
+          Researching Computer Vision and Robotics.<br />
+          Building the embodied intelligence we deserve.
         </div>
         <div class="manifesto-hint">[ click anywhere to close ]</div>
       </div>
@@ -1523,7 +1483,7 @@ onBeforeUnmount(() => {
           </div>
 
           <div class="terminal-history">
-            <div class="terminal-history-scroll">
+            <div ref="terminalScrollRef" class="terminal-history-scroll">
               <template v-for="(entry, index) in visibleHistory" :key="`${entry.type}-${index}-${entry.text}`">
                 <div v-if="entry.type === 'ascii'" class="history-ascii">
                   <div class="ascii-wrap">
@@ -1563,11 +1523,27 @@ onBeforeUnmount(() => {
                     </div>
                   </div>
                 </div>
+                <div v-else-if="entry.commandId === 'projects'" :class="['history-entry', outputClass(entry.type)]">
+                  <div class="terminal-links-card">
+                    <div>ALL PROJECTS:</div>
+                    <br />
+                    <div>
+                      [01]
+                      <a
+                        class="terminal-external-link"
+                        href="https://arxiv.org/html/2606.04172v1"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Affordance2Action: Task-Conditioned Scene-Level Affordance Grounding for Real-Time Manipulation
+                      </a>
+                    </div>
+                  </div>
+                </div>
                 <div v-else :class="['history-entry', outputClass(entry.type)]">
                   {{ entry.text }}
                 </div>
               </template>
-              <div ref="terminalEndRef"></div>
             </div>
           </div>
 

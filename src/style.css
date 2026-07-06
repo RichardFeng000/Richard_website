@@ -109,6 +109,7 @@ input {
 
 .terminal-panel {
   flex-direction: column;
+  height: 100%;
   padding: 1rem;
   cursor: text;
 }
@@ -553,7 +554,7 @@ input {
 
   .workspace {
     height: auto;
-    min-height: 100vh;
+    min-height: 100svh;
   }
 
   .topbar {
@@ -567,9 +568,13 @@ input {
     height: auto;
   }
 
-  .terminal-panel,
+  .terminal-panel {
+    height: 66svh;
+    min-height: 28rem;
+  }
+
   .avatar-panel {
-    min-height: 32rem;
+    min-height: 26rem;
   }
 }
 
@@ -590,6 +595,8 @@ input {
   }
 
   .terminal-panel {
+    height: 64svh;
+    min-height: 25rem;
     padding: 0.8rem;
   }
 
