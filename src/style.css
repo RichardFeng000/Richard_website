@@ -31,6 +31,29 @@ body {
   font-family: "Courier New", Courier, monospace;
 }
 
+body.page-information,
+body.page-vfx,
+body.page-resume {
+  overflow: auto;
+}
+
+html.page-resume,
+body.page-resume,
+html.page-resume #app {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+html.page-vfx {
+  overflow: visible;
+}
+
+body.page-vfx {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
 a {
   color: inherit;
   text-decoration: none;

@@ -1,12 +1,35 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import InformationView from "./InformationView.vue";
+import ResumeView from "./ResumeView.vue";
+import VfxView from "./VfxView.vue";
 import resumeFileUrl from "../materials/Resume_Ruiding_Feng.pdf?url";
 
 const isInformationPage =
   window.location.pathname === "/information" ||
   window.location.pathname === "/information/" ||
   window.location.pathname.endsWith("/information/index.html");
+
+const isVfxPage =
+  window.location.pathname === "/vfx" ||
+  window.location.pathname === "/vfx/" ||
+  window.location.pathname.endsWith("/vfx/index.html");
+
+const isResumePage =
+  window.location.pathname === "/resume" ||
+  window.location.pathname === "/resume/" ||
+  window.location.pathname.endsWith("/resume/index.html");
+
+if (isInformationPage) {
+  document.body.classList.add("page-information");
+  document.documentElement.classList.add("page-information");
+} else if (isVfxPage) {
+  document.body.classList.add("page-vfx");
+  document.documentElement.classList.add("page-vfx");
+} else if (isResumePage) {
+  document.body.classList.add("page-resume");
+  document.documentElement.classList.add("page-resume");
+}
 
 type EntryType = "ascii" | "system" | "intro" | "user" | "output" | "error";
 type AvatarState = "watching" | "typing" | "success" | "error" | "scan";
@@ -163,6 +186,9 @@ Ruiding Feng
   [GitHub]     github.com/RichardFeng000
   [LinkedIn]   linkedin.com/in/ruiding-feng-552640268
   [Email]      rf711@scarletmail.rutgers.edu`,
+  door: `DOORWAY:
+  [Official] https://www.ruiding-feng.com/information
+  [VFX]      https://www.ruiding-feng.com/vfx`,
   scan: `INITIATING FULL SPECTRUM SCAN...
 > Scanning visitor biometrics.......... DONE
 > Analyzing neural pattern............. DONE
@@ -832,13 +858,17 @@ const handleCommand = (rawCommand: string) => {
     appendEntry(
       "output",
       commandResponses[normalized],
-      normalized === "resume" || normalized === "links" || normalized === "projects" ? normalized : undefined
+      normalized === "resume" || normalized === "links" || normalized === "projects" || normalized === "door"
+        ? normalized
+        : undefined
     );
 
     if (normalized === "about") {
       setSpeech("Nice to meet you. I build robots that think and act.");
     } else if (normalized === "skills") {
       setSpeech("My stack goes from silicon to cloud. Full vertical.");
+    } else if (normalized === "door") {
+      setSpeech("Two doors opened: official profile and VFX archive.");
     } else if (normalized === "help") {
       setSpeech('Here are all the commands. Try "about" or "projects".');
     } else {
@@ -1395,6 +1425,8 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  document.body.classList.remove("page-information", "page-vfx", "page-resume");
+  document.documentElement.classList.remove("page-information", "page-vfx", "page-resume");
   clearOverloadTimeouts();
   if (handleMouseMove) {
     window.removeEventListener("mousemove", handleMouseMove);
@@ -1409,6 +1441,8 @@ onBeforeUnmount(() => {
 
 <template>
   <InformationView v-if="isInformationPage" />
+  <VfxView v-else-if="isVfxPage" />
+  <ResumeView v-else-if="isResumePage" />
   <div v-else :class="['app-shell', { 'app-shell--overload': isOverloadRunning }]">
     <div v-if="crtEnabled" class="crt-overlay"></div>
     <div v-if="crtEnabled" class="crt-flicker"></div>
@@ -1591,6 +1625,33 @@ onBeforeUnmount(() => {
                         rel="noopener noreferrer"
                       >
                         Affordance2Action: Task-Conditioned Scene-Level Affordance Grounding for Real-Time Manipulation
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div v-else-if="entry.commandId === 'door'" :class="['history-entry', outputClass(entry.type)]">
+                  <div class="terminal-links-card">
+                    <div>DOORWAY:</div>
+                    <div class="terminal-links-row">
+                      <span class="terminal-links-label">[Official]</span>
+                      <a
+                        class="terminal-external-link"
+                        href="https://www.ruiding-feng.com/information"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        www.ruiding-feng.com/information
+                      </a>
+                    </div>
+                    <div class="terminal-links-row">
+                      <span class="terminal-links-label">[VFX]</span>
+                      <a
+                        class="terminal-external-link"
+                        href="https://www.ruiding-feng.com/vfx"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        www.ruiding-feng.com/vfx
                       </a>
                     </div>
                   </div>

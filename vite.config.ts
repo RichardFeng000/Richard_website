@@ -9,6 +9,8 @@ export default defineConfig({
       input: {
         main: "index.html",
         information: "information/index.html",
+        resume: "resume/index.html",
+        vfx: "vfx/index.html",
       },
     },
   },

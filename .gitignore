@@ -4,3 +4,6 @@ dist/
 .env
 .env.*
 !.env.example
+.removed-vfx-videos/
+public/resume/
+public/vfx/source/vfx-09-flower.mov
