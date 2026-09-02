@@ -117,6 +117,7 @@ Ruiding Feng
 
   Core fields:
   > Computer Vision
+  > Computer Graphics
   > Robotics
 
   I am Ruiding Feng, a graduate student in Computer Science

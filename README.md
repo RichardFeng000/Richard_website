@@ -101,6 +101,7 @@ This is the formal profile page. It is intentionally simpler than the terminal s
 The page presents Ruiding Feng as focused on:
 
 - Computer Vision
+- Computer Graphics
 - Robotics
 
 It also includes the publication:

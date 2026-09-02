@@ -84,7 +84,7 @@ const scrollTo = (id: string) => {
             </p>
 
             <h2>🔬 Research Focus</h2>
-            <p>Computer Vision and Robotics.</p>
+            <p>Computer Vision, Computer Graphics, and Robotics.</p>
 
             <h2>🌍 Vision</h2>
             <p>Building embodied intelligence for the physical world.</p>
