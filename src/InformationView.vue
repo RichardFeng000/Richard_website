@@ -68,7 +68,10 @@ const scrollTo = (id: string) => {
             </p>
 
             <p>
-              My research interests include computer vision and robotics.
+              My research spans computer vision, computer graphics, and robotics, with a
+              focus on physical AI—structured object and scene generation, articulated
+              and kinematic 3D modeling, physics-aware simulation, real-to-sim
+              reconstruction, and policy learning for embodied systems.
             </p>
 
             <p>

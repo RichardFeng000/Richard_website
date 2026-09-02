@@ -122,7 +122,10 @@ Ruiding Feng
   I am Ruiding Feng, a graduate student in Computer Science
   at Rutgers University.
 
-  My research interests include computer vision and robotics.
+  My research spans computer vision, computer graphics, and robotics,
+  with a focus on physical AI: structured object and scene generation,
+  articulated and kinematic 3D modeling, physics-aware simulation,
+  real-to-sim reconstruction, and policy learning for embodied systems.
 
   Before Rutgers, I received my B.A. in Computer Science and
   Mathematics from Boston University and spent a year studying
@@ -173,7 +176,8 @@ Ruiding Feng
 
   projects: `ALL PROJECTS:
 
-  [01] Affordance2Action: Task-Conditioned Scene-Level Affordance Grounding for Real-Time Manipulation`,
+  [01] Affordance2Action: Task-Conditioned Scene-Level Affordance Grounding for Real-Time Manipulation
+  [02] TreeStruct3D: Enabling Structural Editability in Agentic Procedural 3D Modeling`,
   resume: `RESUME:
   Status: Available upon request.
   Contact: rf711@scarletmail.rutgers.edu
@@ -1451,8 +1455,7 @@ onBeforeUnmount(() => {
       <div class="manifesto-card" @click.stop>
         <div class="manifesto-label">About</div>
         <div class="manifesto-copy">
-          Researching Computer Vision and Robotics.<br />
-          Building the embodied intelligence we deserve.
+          My research spans computer vision, computer graphics, and robotics, with a focus on physical AI—structured object and scene generation, articulated and kinematic 3D modeling, physics-aware simulation, real-to-sim reconstruction, and policy learning for embodied systems.
         </div>
         <div class="manifesto-hint">[ click anywhere to close ]</div>
       </div>
@@ -1626,6 +1629,9 @@ onBeforeUnmount(() => {
                       >
                         Affordance2Action: Task-Conditioned Scene-Level Affordance Grounding for Real-Time Manipulation
                       </a>
+                    </div>
+                    <div>
+                      [02] TreeStruct3D: Enabling Structural Editability in Agentic Procedural 3D Modeling
                     </div>
                   </div>
                 </div>
