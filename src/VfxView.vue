@@ -12,6 +12,8 @@ type Work = {
   poster?: string;
 };
 
+type View = "home" | "demo" | "resume" | "about";
+
 const works: Work[] = [
   {
     id: "vfx-01",
@@ -115,7 +117,7 @@ const proceduralWork = computed(() => proceduralWorks[currentProceduralIndex.val
 const tripleWorks = [works[3], works[4], works[5]];
 const edWork = works[9];
 const selectedWork = ref<(typeof works)[number] | null>(null);
-const activeView = ref<"home" | "demo" | "resume">("home");
+const activeView = ref<View>("home");
 const selectedWorkIndex = computed(() =>
   selectedWork.value ? works.findIndex((work) => work.id === selectedWork.value?.id) : -1,
 );
@@ -143,7 +145,7 @@ const showAdjacentWork = (direction: -1 | 1) => {
   selectedWork.value = works[nextIndex];
 };
 
-const showView = (view: "home" | "demo" | "resume") => {
+const showView = (view: View) => {
   activeView.value = view;
   closePlayer();
   window.scrollTo({ top: 0, behavior: "auto" });
@@ -222,6 +224,7 @@ onBeforeUnmount(() => {
       <nav class="nav-links" aria-label="VFX navigation">
         <button
           :class="{ active: activeView === 'home' }"
+          :aria-current="activeView === 'home' ? 'page' : undefined"
           type="button"
           @click="showView('home')"
         >
@@ -229,6 +232,7 @@ onBeforeUnmount(() => {
         </button>
         <button
           :class="{ active: activeView === 'demo' }"
+          :aria-current="activeView === 'demo' ? 'page' : undefined"
           type="button"
           @click="showView('demo')"
         >
@@ -236,12 +240,20 @@ onBeforeUnmount(() => {
         </button>
         <button
           :class="{ active: activeView === 'resume' }"
+          :aria-current="activeView === 'resume' ? 'page' : undefined"
           type="button"
           @click="showView('resume')"
         >
           Resume
         </button>
-        <a href="/information">About Me</a>
+        <button
+          :class="{ active: activeView === 'about' }"
+          :aria-current="activeView === 'about' ? 'page' : undefined"
+          type="button"
+          @click="showView('about')"
+        >
+          About Me
+        </button>
       </nav>
     </header>
 
@@ -375,6 +387,34 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
+    <section v-else-if="activeView === 'about'" class="about-stage" aria-label="About Me">
+      <div class="about-inner">
+        <img
+          class="about-portrait"
+          src="/vfx/ruiding-feng-portrait.png"
+          alt="Ruiding Feng"
+          width="1122"
+          height="1402"
+        />
+        <p>
+          I'm Ruiding Feng, a VFX artist exploring procedural visuals,
+          simulation, and real-time environments.
+        </p>
+        <p>
+          My work spans Houdini FX and procedural modeling, Unreal Engine
+          cinematics, and lighting. I enjoy bringing a technical approach to
+          visual storytelling through motion, atmosphere, and detail.
+        </p>
+        <p>
+          I spent a year studying Visual Effects at SCAD after earning my B.A.
+          in Computer Science and Mathematics from Boston University. I'm now
+          a graduate student in Computer Science at Rutgers University,
+          with interests in computer graphics, computer vision, and robotics.
+        </p>
+        <p>Outside of digital work, I enjoy shooting with film cameras.</p>
+      </div>
+    </section>
+
     <Teleport to="body">
       <div v-if="selectedWork" class="video-modal" role="dialog" aria-modal="true" @click.self="closePlayer">
         <div class="video-modal-panel">
@@ -488,7 +528,6 @@ onBeforeUnmount(() => {
   font-size: 14px;
 }
 
-.nav-links a,
 .nav-links button {
   padding: 0;
   border: 0;
@@ -499,11 +538,39 @@ onBeforeUnmount(() => {
   cursor: pointer;
 }
 
-.nav-links a:first-child,
-.nav-links a:hover,
 .nav-links button:hover,
 .nav-links button.active {
   color: #5fbfac;
+}
+
+.nav-links button:focus-visible {
+  outline: 2px solid #5fbfac;
+  outline-offset: 6px;
+}
+
+.about-stage {
+  min-height: calc(100vh - 243px);
+  padding: 58px 24px 88px;
+  background: #000;
+}
+
+.about-inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.about-portrait {
+  display: block;
+  width: min(240px, 100%);
+  height: auto;
+  margin: 0 auto 32px;
+}
+
+.about-inner p {
+  margin: 0 0 20px;
+  color: #bdbdbd;
+  font-size: 15px;
+  line-height: 1.8;
 }
 
 .fixed-panel {
@@ -949,6 +1016,11 @@ onBeforeUnmount(() => {
   .nav-links {
     flex-wrap: wrap;
     gap: 14px 24px;
+  }
+
+  .about-stage {
+    min-height: calc(100vh - 211px);
+    padding: 44px 24px 72px;
   }
 
   .triple-grid {

@@ -161,6 +161,8 @@ The header is ordinary page content, not an internal scrolling container. The pa
 
 The `Resume` item switches the VFX content area to a black resume page and centers a floating PDF preview below the navigation without leaving `/vfx`.
 
+The `About Me` item switches to a simple, narrow single-column introduction within `/vfx`, keeping the navigation visible. A centered portrait retains its natural proportions above four paragraphs about VFX work, education, and film photography.
+
 ### Demo Interaction
 
 The demo section is designed as a categorized media index:
@@ -246,6 +248,7 @@ public/vfx/source/vfx-10-UE.mp4
 ### Technical Notes
 
 - `VfxView.vue` stores the video metadata in the `works` array.
+- `activeView` switches between the home, demo, resume, and about content; `About Me` does not navigate to `/information`.
 - The first screen uses `fxHeroWorks`.
 - The ED A3 screen uses `edWork`.
 - The second screen uses `proceduralWorks`.
