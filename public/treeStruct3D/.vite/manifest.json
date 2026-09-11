@@ -18,8 +18,19 @@
     "file": "treeStruct3D/_next/static/chunks/rolldown-runtime-CS7EocqQ.js",
     "name": "rolldown-runtime"
   },
+  "app/components/FigureCarousel.tsx": {
+    "file": "treeStruct3D/_next/static/chunks/FigureCarousel-CdnCxSj4.js",
+    "name": "FigureCarousel",
+    "src": "app/components/FigureCarousel.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-CS7EocqQ.js",
+      "app/components/ZoomableImage.tsx",
+      "_framework-BZnkf1cW.js"
+    ]
+  },
   "app/components/ZoomableImage.tsx": {
-    "file": "treeStruct3D/_next/static/chunks/ZoomableImage-BXuFtBYE.js",
+    "file": "treeStruct3D/_next/static/chunks/ZoomableImage-BKWq5IMO.js",
     "name": "ZoomableImage",
     "src": "app/components/ZoomableImage.tsx",
     "isDynamicEntry": true,
@@ -30,7 +41,7 @@
     ]
   },
   "node_modules/vinext/dist/shims/internal/app-route-prefetch-policy.js": {
-    "file": "treeStruct3D/_next/static/chunks/app-route-prefetch-policy-B3dn7as8.js",
+    "file": "treeStruct3D/_next/static/chunks/app-route-prefetch-policy-Dlt9YjkE.js",
     "name": "app-route-prefetch-policy",
     "src": "node_modules/vinext/dist/shims/internal/app-route-prefetch-policy.js",
     "isDynamicEntry": true,
@@ -39,7 +50,7 @@
     ]
   },
   "node_modules/vinext/dist/shims/layout-segment-context.js": {
-    "file": "treeStruct3D/_next/static/chunks/layout-segment-context-CS7VhXVi.js",
+    "file": "treeStruct3D/_next/static/chunks/layout-segment-context-Cqj_tmP2.js",
     "name": "layout-segment-context",
     "src": "node_modules/vinext/dist/shims/layout-segment-context.js",
     "isDynamicEntry": true,
@@ -50,7 +61,7 @@
     ]
   },
   "node_modules/vinext/dist/shims/streamed-icons.js": {
-    "file": "treeStruct3D/_next/static/chunks/streamed-icons-Un1uSzKR.js",
+    "file": "treeStruct3D/_next/static/chunks/streamed-icons-5o7f6aOz.js",
     "name": "streamed-icons",
     "src": "node_modules/vinext/dist/shims/streamed-icons.js",
     "isDynamicEntry": true,
@@ -60,7 +71,7 @@
     ]
   },
   "virtual:vinext-app-browser-entry": {
-    "file": "treeStruct3D/_next/static/chunks/index-k3gymdrn.js",
+    "file": "treeStruct3D/_next/static/chunks/index-LmaebjM-.js",
     "name": "index",
     "src": "virtual:vinext-app-browser-entry",
     "isEntry": true,
@@ -73,6 +84,7 @@
       "virtual:vinext-app-browser-entry",
       "node_modules/vinext/dist/shims/layout-segment-context.js",
       "_Icon-Bhgn85Uj.js",
+      "app/components/FigureCarousel.tsx",
       "node_modules/vinext/dist/shims/streamed-icons.js",
       "app/components/ZoomableImage.tsx"
     ]
