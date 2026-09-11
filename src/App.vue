@@ -1633,7 +1633,12 @@ onBeforeUnmount(() => {
                     </div>
                     <div>
                       [02]
-                      <a href="/treeStruct3D/" target="_blank" rel="noopener noreferrer">
+                      <a
+                        class="terminal-external-link"
+                        href="https://www.ruiding-feng.com/treeStruct3D/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         TreeStruct3D: Enabling Structural Editability in Agentic Procedural 3D Modeling
                       </a>
                     </div>
