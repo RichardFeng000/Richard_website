@@ -6,6 +6,7 @@ This repository contains three related portfolio experiences built with Vue 3 an
 - `/information` - a clean official profile page.
 - `/vfx` - a VFX reel site with video-first scrolling.
 - `/resume` - an optional direct full-page resume PDF preview.
+- `/treeStruct3D/` - the TreeStruct3D research project website.
 
 The project is intentionally minimal: Vue single-file components, Vite multi-page entry points, static assets under `public/`, and no UI framework.
 
@@ -58,7 +59,7 @@ Main visible commands include:
 - `help` - lists available commands.
 - `about` - prints the biographical profile.
 - `skills` - prints categorized technical skills.
-- `projects` - shows the Affordance2Action project.
+- `projects` - links to the Affordance2Action and TreeStruct3D projects.
 - `resume` - opens the embedded resume viewer.
 - `contact` - prints email, GitHub, and LinkedIn.
 - `links` - prints external links.
@@ -279,6 +280,14 @@ The app applies route-specific classes to both `body` and `html`:
 These classes control page-level overflow behavior.
 
 ## Deployment Notes
+
+The TreeStruct3D page is a static export from
+[`RichardFeng000/TreeStruct3D-Website`](https://github.com/RichardFeng000/TreeStruct3D-Website).
+Run `npm run build:portfolio` in that repository and copy its `dist/client/`
+contents into `public/treeStruct3D/` before building this portfolio. The
+case-sensitive public URL is <https://www.ruiding-feng.com/treeStruct3D/>;
+GitHub Pages redirects the URL without the trailing slash to this directory.
+Keep `public/TreeStruct3D-Website/` available for previously shared links.
 
 The production domain currently used in the app is:
 

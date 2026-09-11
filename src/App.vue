@@ -1632,7 +1632,10 @@ onBeforeUnmount(() => {
                       </a>
                     </div>
                     <div>
-                      [02] TreeStruct3D: Enabling Structural Editability in Agentic Procedural 3D Modeling
+                      [02]
+                      <a href="/treeStruct3D/" target="_blank" rel="noopener noreferrer">
+                        TreeStruct3D: Enabling Structural Editability in Agentic Procedural 3D Modeling
+                      </a>
                     </div>
                   </div>
                 </div>
