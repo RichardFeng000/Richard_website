@@ -283,6 +283,10 @@ These classes control page-level overflow behavior.
 
 The TreeStruct3D page is a static export from
 [`RichardFeng000/TreeStruct3D-Website`](https://github.com/RichardFeng000/TreeStruct3D-Website).
+It opens an interactive model and structure inspector adapted from the project's
+Visual Validation Toolkit, with four curated GLB/runtime snapshots and a light
+theme. Browser interactions inspect saved results; Blender generation runs in
+the local toolkit.
 Run `npm run build:portfolio` in that repository and copy its `dist/client/`
 contents into `public/treeStruct3D/` before building this portfolio. The
 case-sensitive public URL is <https://www.ruiding-feng.com/treeStruct3D/>;
