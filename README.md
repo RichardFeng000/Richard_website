@@ -287,7 +287,7 @@ Run `npm run build:portfolio` in that repository and copy its `dist/client/`
 contents into `public/treeStruct3D/` before building this portfolio. The
 case-sensitive public URL is <https://www.ruiding-feng.com/treeStruct3D/>;
 GitHub Pages redirects the URL without the trailing slash to this directory.
-Keep `public/TreeStruct3D-Website/` available for previously shared links.
+Only `public/treeStruct3D/` is published; the legacy `public/TreeStruct3D-Website/` snapshot has been removed.
 
 The production domain currently used in the app is:
 
