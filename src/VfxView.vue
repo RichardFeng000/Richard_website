@@ -6,7 +6,7 @@ type Work = {
   id: string;
   title: string;
   subtitle: string;
-  category: "FX" | "Unreal Engine" | "Houdini procedure" | "Lighting work";
+  category: "FX" | "Unreal Engine" | "Houdini procedure" | "Lighting work" | "Research";
   video?: string;
   image?: string;
   poster?: string;
@@ -92,6 +92,13 @@ const works: Work[] = [
     video: "/vfx/source/vfx-10-UE.mp4",
     poster: "",
   },
+  {
+    id: "vfx-11",
+    title: "Research 01",
+    subtitle: "Research project study",
+    category: "Research",
+    video: "/vfx/source/vfx-11-research.mp4",
+  },
 ];
 
 const demoCategories = [
@@ -99,6 +106,7 @@ const demoCategories = [
   "Unreal Engine",
   "Houdini procedure",
   "Lighting work",
+  "Research",
 ] as const;
 
 const demoGroups = computed(() =>
