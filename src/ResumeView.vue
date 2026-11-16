@@ -7,7 +7,7 @@ import resumeFileUrl from "../materials/Resume_Ruiding_Feng.pdf?url";
     <iframe
       :src="resumeFileUrl"
       class="resume-page-frame"
-      title="Richard Resume"
+      title="Ruiding Feng Resume"
     ></iframe>
   </main>
 </template>
