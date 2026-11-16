@@ -223,7 +223,7 @@ onBeforeUnmount(() => {
   <main class="vfx-page">
     <header class="site-header">
       <div class="identity">
-        <span class="name">RUIDING FENG</span>
+        <span class="name">RICHARD</span>
         <span class="role">VFX Artist</span>
       </div>
 
@@ -386,11 +386,11 @@ onBeforeUnmount(() => {
 
     <section v-else-if="activeView === 'resume'" class="resume-stage" aria-label="Resume preview">
       <div class="resume-stage-label resume-stage-label--left" aria-hidden="true">CURRICULUM VITAE</div>
-      <div class="resume-stage-label resume-stage-label--right" aria-hidden="true">RUIDING FENG</div>
+      <div class="resume-stage-label resume-stage-label--right" aria-hidden="true">RICHARD</div>
       <div class="resume-document">
         <iframe
           :src="resumeFileUrl"
-          title="Ruiding Feng Resume"
+          title="Richard Resume"
         ></iframe>
       </div>
     </section>
@@ -400,12 +400,12 @@ onBeforeUnmount(() => {
         <img
           class="about-portrait"
           src="/vfx/ruiding-feng-portrait.png"
-          alt="Ruiding Feng"
+          alt="Richard"
           width="1122"
           height="1402"
         />
         <p>
-          I'm Ruiding Feng, a VFX artist exploring procedural visuals,
+          I'm Richard, a VFX artist exploring procedural visuals,
           simulation, and real-time environments.
         </p>
         <p>

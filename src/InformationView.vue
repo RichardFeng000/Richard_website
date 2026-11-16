@@ -17,7 +17,7 @@ const scrollTo = (id: string) => {
     <div class="masthead">
       <div class="masthead-inner">
         <nav class="site-nav">
-          <a href="/" class="site-title">Ruiding Feng</a>
+          <a href="/" class="site-title">Richard</a>
           <ul class="nav-links">
             <li v-for="item in navItems" :key="item.id">
               <a :href="`#${item.id}`" @click.prevent="scrollTo(item.id)">{{ item.label }}</a>
@@ -34,7 +34,7 @@ const scrollTo = (id: string) => {
             <span class="avatar-text">R</span>
           </div>
           <div class="profile-content">
-            <h3 class="profile-name">Ruiding Feng</h3>
+            <h3 class="profile-name">Richard</h3>
           </div>
           <ul class="profile-links">
             <li><i class="loc-icon">📍</i> China / Remote</li>
@@ -60,10 +60,10 @@ const scrollTo = (id: string) => {
       <main class="page-content">
         <article>
           <section id="about" class="content-section">
-            <h1>Ruiding Feng</h1>
+            <h1>Richard</h1>
 
             <p>
-              I am Ruiding Feng, a graduate student in Computer Science at Rutgers
+              I am Richard, a graduate student in Computer Science at Rutgers
               University.
             </p>
 

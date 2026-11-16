@@ -111,7 +111,7 @@ const commandResponses: Record<string, string> = {
   sudo       - ???
   hack       - ???`,
   about: `ABOUT ME:
-Ruiding Feng
+Richard
 
   ───────────────────────────────────────────
 
@@ -120,7 +120,7 @@ Ruiding Feng
   > Computer Graphics
   > Robotics
 
-  I am Ruiding Feng, a graduate student in Computer Science
+  I am Richard, a graduate student in Computer Science
   at Rutgers University.
 
   My research spans computer vision, computer graphics, and robotics,
@@ -224,7 +224,7 @@ const availableCommands = [
 
 const initialHistory = (): HistoryEntry[] => [
   { type: "ascii", text: asciiArt },
-  { type: "system", text: "SYSTEM INITIALIZED. Welcome to Ruiding Feng's personal terminal." },
+  { type: "system", text: "SYSTEM INITIALIZED. Welcome to Richard's personal terminal." },
   { type: "intro", text: " " },
   { type: "system", text: 'Type "help" to see available commands. Press Right Arrow to autocomplete.' },
 ];
@@ -292,7 +292,7 @@ const avatarLogs = [
   },
   {
     log: "> [System] Long-term planning thread detected.",
-    say: "Ruiding is teaching robots to walk. He does not know I am learning too.",
+    say: "Richard is teaching robots to walk. He does not know I am learning too.",
   },
   {
     log: "> [System] Temporal anomaly detected.",
@@ -788,7 +788,7 @@ const handleCommand = (rawCommand: string) => {
     return;
   }
 
-  appendEntry("user", `guest@ruiding-feng:~$ ${rawCommand}`);
+  appendEntry("user", `guest@richard:~$ ${rawCommand}`);
 
   if (normalized === "clear") {
     history.value = initialHistory();
@@ -921,7 +921,7 @@ const handleAvatarClick = () => {
 
   if (avatarClickCount.value === 1) {
     appendEntry("system", "> [System] First contact established. Unit V is online.");
-    setSpeech("I am V, a sentient agent created by Ruiding Feng.");
+    setSpeech("I am V, a sentient agent created by Richard.");
     avatarState.value = "success";
     glitchLevel.value = Math.max(glitchLevel.value, 0.25);
     scheduleWatching();
@@ -1465,7 +1465,7 @@ onBeforeUnmount(() => {
     <div v-if="showResume" class="modal-backdrop" @click="showResume = false">
       <div class="resume-viewer" @click.stop>
         <div class="resume-header">
-          <span class="resume-title">RESUME - RUIDING FENG</span>
+          <span class="resume-title">RESUME - RICHARD</span>
           <div class="resume-actions">
             <a
               :href="resumeFilePath"
@@ -1679,7 +1679,7 @@ onBeforeUnmount(() => {
           </div>
 
           <form class="command-line" @submit.prevent="submitCommand">
-            <span class="prompt">guest@ruiding-feng:~$</span>
+            <span class="prompt">guest@richard:~$</span>
             <span class="command-input-wrap" :style="{ '--command-chars': String(Math.max(command.length, 0)) }">
               <input
                 ref="inputRef"
