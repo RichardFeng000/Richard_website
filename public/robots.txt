@@ -1,0 +1,15 @@
+# Every HTML page carries <meta name="robots" content="noindex">.
+# HTML stays crawlable so search engines can read that tag and drop the pages.
+# Files that cannot carry a meta tag (PDFs, images, built assets) are blocked here.
+User-agent: *
+Disallow: /assets/
+Disallow: /*.pdf$
+Disallow: /*.jpg$
+Disallow: /*.jpeg$
+Disallow: /*.png$
+Disallow: /*.webp$
+Disallow: /*.gif$
+Disallow: /*.svg$
+Disallow: /*.mp4$
+Disallow: /*.mov$
+Disallow: /*.webm$
